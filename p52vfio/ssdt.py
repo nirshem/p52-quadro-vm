@@ -4,11 +4,11 @@ from __future__ import annotations
 
 import base64
 
-# Arch wiki "Error 43 with mobile NVIDIA GPUs" and the ThinkPad P53
-# passthrough notes use this exact table. It publishes BAT0 under
-# \_SB.PCI0, which is where QEMU puts the PCI bus.
+# Same BAT0 methods as the Arch wiki mobile-NVIDIA table, compiled from
+# guest/ssdt-battery.asl. OEM id is LENOVO, not BOCHS: the P1000 driver
+# treats a BOCHS ACPI table as a virtual machine and refuses to start.
 SSDT_BATTERY_B64 = """
-U1NEVKEAAAAB9EJPQ0hTAEJYUENTU0RUAQAAAElOVEwYEBkgoA8AFVwuX1NCX1BDSTAGABBMBi5f
+U1NEVKEAAAABtkxFTk9WT1RISU5LUDUyAQAAAElOVEwoBiMgoA8AFVwuX1NCX1BDSTAGABBMBi5f
 U0JfUENJMFuCTwVCQVQwCF9ISUQMQdAMCghfVUlEABQJX1NUQQCkCh8UK19CSUYApBIjDQELcBcL
 cBcBC9A5C1gCCywBCjwKPA0ADQANTElPTgANABQSX0JTVACkEgoEAAALcBcL0Dk=
 """

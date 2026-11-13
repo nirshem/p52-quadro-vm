@@ -310,6 +310,24 @@ def _apply_subsystem(
     )
 
 
+def _set_acpi_oem(root: ET.Element, notes: list[str]) -> None:
+    """QEMU labels every ACPI table BOCHS. The notebook driver treats that as a VM."""
+    cmdline = root.find(qtag("commandline"))
+    if cmdline is None:
+        cmdline = ET.SubElement(root, qtag("commandline"))
+    target = "x-oem-id=LENOVO,x-oem-table-id=THINKP52"
+    args = [a for a in list(cmdline) if a.tag == qtag("arg")]
+    for arg in args:
+        if (arg.get("value") or "").startswith("x-oem-id="):
+            if arg.get("value") != target:
+                arg.set("value", target)
+                notes.append("Set the ACPI OEM id to LENOVO so the notebook driver does not see BOCHS.")
+            return
+    ET.SubElement(cmdline, qtag("arg"), {"value": "-machine"})
+    ET.SubElement(cmdline, qtag("arg"), {"value": target})
+    notes.append("Set the ACPI OEM id to LENOVO so the notebook driver does not see BOCHS.")
+
+
 def _set_acpitable(root: ET.Element, ssdt_path: str, notes: list[str]) -> None:
     cmdline = root.find(qtag("commandline"))
     if cmdline is None:
@@ -457,6 +475,7 @@ def patch_domain(
         notes.append(f"No hostdev matches the NVIDIA audio device {audio_bdf}. Pass function 1 as well.")
 
     _set_acpitable(root, ssdt_path, notes)
+    _set_acpi_oem(root, notes)
     _ensure_spice(root, notes)
     _none_balloon(root, notes)
 

@@ -1,11 +1,11 @@
 /*
  * Fake battery for the Quadro P1000 notebook driver.
- * The shipped bytes are the known-good SSDT (OEM BOCHS / BXPCSSDT),
- * decoded by p52vfio.ssdt.SSDT_BATTERY. This ASL is the same table,
- * disassembled, so the method names stay reviewable.
+ * The shipped bytes are this table, compiled, in p52vfio.ssdt.SSDT_BATTERY.
+ * OEM id is LENOVO. QEMU's own tables are relabeled the same way, because
+ * the notebook driver treats an OEM id of BOCHS as a virtual machine.
  * QEMU's DSDT already defines \_SB.PCI0. The driver looks there.
  */
-DefinitionBlock ("", "SSDT", 1, "BOCHS", "BXPCSSDT", 0x00000001)
+DefinitionBlock ("", "SSDT", 1, "LENOVO", "THINKP52", 0x00000001)
 {
     External (_SB_.PCI0, DeviceObj)
 
